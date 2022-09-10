@@ -3,6 +3,7 @@
 #include "glfw_renderer_frontend.hpp"
 #include "ny_route.hpp"
 #include "test_writer.hpp"
+#include "pois/point_of_interest_layer.hpp"
 
 #include <mbgl/annotation/annotation.hpp>
 #include <mbgl/gfx/backend.hpp>
@@ -217,6 +218,8 @@ GLFWView::GLFWView(bool fullscreen_, bool benchmark_, const mbgl::ResourceOption
     printf("- Press `L` to add a random line annotation\n");
     printf("- Press `W` to pop the last-added annotation off\n");
     printf("- Press `P` to pause tile requests\n");
+    printf("- Press `<` to switch between sights\n");
+    printf("- Press `>` to remove sights\n");  
     printf("\n");
     printf("- Hold `Control` + mouse drag to rotate\n");
     printf("- Hold `Shift` + mouse drag to tilt\n");
@@ -452,6 +455,40 @@ void GLFWView::onKey(GLFWwindow *window, int key, int /*scancode*/, int action, 
                 layer->setVisibility(layer->getVisibility() == mbgl::style::VisibilityType::Visible
                                          ? mbgl::style::VisibilityType::None
                                          : mbgl::style::VisibilityType::Visible);
+            }
+        } break;
+        case GLFW_KEY_COMMA: {
+            using namespace mbgl;
+            using namespace mbgl::style;
+
+            auto &style = view->map->getStyle();
+            const std::string poiLayer = "PoI";
+            if (!style.getLayer(poiLayer))
+            {
+                style.addLayer(std::make_unique<CustomLayer>("PoI", std::make_unique<PointOfInterestLayer>()));
+            }
+            else {
+                if (style.getLayer(poiLayer)->getVisibility() == VisibilityType::None){
+                    mbgl::Log::Info(mbgl::Event::General, "Exist but invisible");
+                }
+            }
+            mbgl::CameraOptions cameraOptions;
+            cameraOptions.center = mbgl::LatLng{48.85806, 2.29444};
+            cameraOptions.zoom = 15;
+            cameraOptions.pitch = 0;
+            cameraOptions.bearing = 0;
+            view->map->jumpTo(cameraOptions);
+
+        } break;
+        case GLFW_KEY_PERIOD: {
+            using namespace mbgl;
+            using namespace mbgl::style;
+
+            auto &style = view->map->getStyle();
+            const std::string poiLayer = "PoI";
+            if (style.getLayer(poiLayer))
+            {
+                style.removeLayer(poiLayer);
             }
         } break;
         case GLFW_KEY_F1: {
