@@ -12,10 +12,13 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/platform/glfw/test_writer.cpp
     ${PROJECT_SOURCE_DIR}/platform/default/src/mbgl/map/map_snapshotter.cpp
     ${PROJECT_SOURCE_DIR}/platform/glfw/pois/point_of_interest_layer.hpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/sights_manager.hpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/sights_manager.cpp
 )
 
 set_property(
     SOURCE ${PROJECT_SOURCE_DIR}/platform/glfw/glfw_view.cpp
+           ${PROJECT_SOURCE_DIR}/platform/glfw/pois/sights_manager.cpp
     PROPERTY COMPILE_DEFINITIONS MAPBOX_PUCK_ASSETS_PATH=\"${PROJECT_SOURCE_DIR}/platform/glfw/assets/\"
 )
 

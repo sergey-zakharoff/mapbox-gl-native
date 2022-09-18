@@ -16,6 +16,7 @@ struct GLFWwindow;
 class GLFWBackend;
 class GLFWRendererFrontend;
 class SnapshotObserver;
+class SightsManager;
 
 namespace mbgl {
 namespace gfx {
@@ -151,6 +152,7 @@ private:
     mbgl::optional<std::string> featureID;
     std::unique_ptr<mbgl::MapSnapshotter> snapshotter;
     std::unique_ptr<SnapshotObserver> snapshotterObserver;
+    std::unique_ptr<SightsManager> sightsManager;
     mbgl::ResourceOptions mapResourceOptions;
 
 #if defined(MBGL_RENDER_BACKEND_OPENGL) && !defined(MBGL_LAYER_CUSTOM_DISABLE_ALL)

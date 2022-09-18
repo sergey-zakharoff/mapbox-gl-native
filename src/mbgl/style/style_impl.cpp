@@ -39,7 +39,9 @@ Style::Impl::Impl(std::shared_ptr<FileSource> fileSource_, float pixelRatio)
     light->setObserver(this);
 }
 
-Style::Impl::~Impl() = default;
+Style::Impl::~Impl() { 
+  Log::Info(Event::General, "Removing style");
+};
 
 void Style::Impl::loadJSON(const std::string& json_) {
     lastError = nullptr;
@@ -167,7 +169,7 @@ std::unique_ptr<Source> Style::Impl::removeSource(const std::string& id) {
             return nullptr;
         }
     }
-
+    
     std::unique_ptr<Source> source = sources.remove(id);
 
     if (source) {
@@ -215,6 +217,7 @@ Layer* Style::Impl::addLayer(std::unique_ptr<Layer> layer, const optional<std::s
 
 std::unique_ptr<Layer> Style::Impl::removeLayer(const std::string& id) {
     std::unique_ptr<Layer> layer = layers.remove(id);
+    Log::Info(Event::General, "Removing layer '%s' ", id.c_str());
 
     if (layer) {
         layer->setObserver(nullptr);

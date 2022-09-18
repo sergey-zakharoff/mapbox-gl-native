@@ -1,4 +1,7 @@
-
+/*
+    layer for displaying some set of defined points on the map 
+    Sergey Zakharov, 2022
+*/
 #include <mbgl/gl/custom_layer.hpp>
 #include <mbgl/gl/defines.hpp>
 #include <mbgl/map/map.hpp>
@@ -31,9 +34,7 @@ void main() {
 }
 )MBGL_SHADER";
 
-// Not using any mbgl-specific stuff (other than a basic error-checking macro) in the
-// layer implementation because it is intended to reflect how someone using custom layers
-// might actually write their own implementation.
+
 
 class PointOfInterestLayer : public mbgl::style::CustomLayerHost {
 public:

@@ -1,0 +1,25 @@
+{
+    "points": [
+        { 
+           "display_name": "Eiffel Tower",
+           "lat": 48.85806,
+           "lon": 2.29444,
+           "zoom": 15,
+           "model_name": "eiffel/10067_Eiffel_Tower_v1_max2010_it1.obj"
+        },
+        { 
+           "display_name": "Big Ben",
+           "lat": 51.5007,
+           "lon": -0.1245,
+           "zoom": 15,
+           "model_name": "bigben/10059_big_ben_v2_max2011_it1.obj"
+        },
+        { 
+           "display_name": "Statue of Libery",
+           "lat": 40.689167,
+           "lon": -74.044444,
+           "zoom": 15,
+           "model_name": "liberty/21512_Statue_Of_Liberty_V1_NEW.obj"
+        }
+    ]
+}
