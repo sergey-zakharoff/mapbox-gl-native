@@ -14,6 +14,10 @@ add_executable(
     ${PROJECT_SOURCE_DIR}/platform/glfw/pois/point_of_interest_layer.hpp
     ${PROJECT_SOURCE_DIR}/platform/glfw/pois/sights_manager.hpp
     ${PROJECT_SOURCE_DIR}/platform/glfw/pois/sights_manager.cpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/graphicNode.hpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/graphicNode.cpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/graphicGeometry.hpp
+    ${PROJECT_SOURCE_DIR}/platform/glfw/pois/graphicGeometry.cpp
 )
 
 set_property(

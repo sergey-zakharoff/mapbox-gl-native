@@ -12,6 +12,11 @@
 #include <mbgl/util/io.hpp>
 #include <mbgl/util/logging.hpp>
 
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+
+#include <fstream>
+
 namespace {
     const std::string assetsRootDir {MAPBOX_PUCK_ASSETS_PATH };
 }
@@ -38,9 +43,10 @@ SightsManager::~SightsManager()
 void SightsManager::next(mbgl::Map* map)
 {
     assert(map);
-    size_t nextSight = currentSight++;
+    size_t nextSight = currentSight + 1;
     if (nextSight >= m_sights.size())
         nextSight = 0;
+    mbgl::Log::Info(mbgl::Event::General, "jumping to: %d, size %d", nextSight, m_sights.size());
 
     jumpTo(nextSight, map);
 }
@@ -101,15 +107,49 @@ bool SightsManager::jumpTo(size_t nextPoint, mbgl::Map* map)
     return true;
 }
 
-void SightsManager::loadData(){
-    auto sight = std::make_unique<mapPointDescription>();
-    sight->lat = 48.85806;
-    sight->lon = 2.29444;
-    sight->zoom = 15;
+void SightsManager::loadData()
+{
+    auto path = assetsRootDir + "sights.json";
+    auto pointsTag = "points";
 
-    auto data = mbgl::util::read_file(assetsRootDir + "sights.json");
-    mbgl::Log::Info(mbgl::Event::General, "Data: %s", data);
+    mbgl::Log::Info(mbgl::Event::General, "loading sights: %s", path.c_str());
 
-    
-    m_sights.push_back(std::move(sight));
+    std::fstream ifs(path);
+
+    rapidjson::Document doc;
+    rapidjson::IStreamWrapper rapidWrapper(ifs);
+
+    doc.ParseStream(rapidWrapper);
+    if (!doc.IsObject()) {
+        mbgl::Log::Info(mbgl::Event::General, "cannot parse file");
+        return;
+    }
+
+    if (!doc.HasMember(pointsTag) || !doc[pointsTag].IsArray()){
+        mbgl::Log::Info(mbgl::Event::General, "bad format");
+        return;
+    }
+
+    const rapidjson::Value& points = doc[pointsTag];
+    for (rapidjson::SizeType i = 0; i < points.Size(); i++) {
+        const rapidjson::Value& point = points[i];
+        if (!point.HasMember("lat") || 
+            !point.HasMember("lon") || 
+            !point.HasMember("zoom") ||
+            !point.HasMember("model_name") ||
+            !point.HasMember("display_name"))
+                continue;
+
+        auto sight = std::make_unique<mapPointDescription>();
+
+        sight->lat = point["lat"].GetDouble();
+        sight->lon = point["lon"].GetDouble();
+        sight->zoom = point["zoom"].GetInt();
+        sight->model = point["model_name"].GetString();
+        sight->name = point["display_name"].GetString();
+
+        mbgl::Log::Info(mbgl::Event::General, "loaded place: %s", sight->name.c_str());
+
+        m_sights.push_back(std::move(sight));
+    }
 }

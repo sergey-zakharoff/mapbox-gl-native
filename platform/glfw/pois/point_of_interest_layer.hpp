@@ -14,6 +14,8 @@
 #include <mbgl/util/mat4.hpp>
 #include <mbgl/util/logging.hpp>
 
+#include "graphicNode.hpp"
+#include <memory>
 
 using namespace mbgl;
 using namespace mbgl::style;
@@ -39,11 +41,10 @@ void main() {
 class PointOfInterestLayer : public mbgl::style::CustomLayerHost {
 public:
     ~PointOfInterestLayer() override {
-        mbgl::Log::Info(mbgl::Event::General, "Destroyed!!");
+        mbgl::Log::Info(mbgl::Event::General, "PointOfInterestLayer was destroyed.");
     }
 
     void initialize() override {
-        mbgl::Log::Info(mbgl::Event::General, "++++++++++++++++++++++++++++++++");
         program = MBGL_CHECK_ERROR(glCreateProgram());
         vertexShader = MBGL_CHECK_ERROR(glCreateShader(GL_VERTEX_SHADER));
         fragmentShader = MBGL_CHECK_ERROR(glCreateShader(GL_FRAGMENT_SHADER));
@@ -82,9 +83,6 @@ public:
                 MBGL_CHECK_ERROR(glDeleteShader(fragmentShader));
                 MBGL_CHECK_ERROR(glDeleteProgram(program));
             }
-
-        mbgl::Log::Info(mbgl::Event::General, "--------------------------");
-
     }
 
     GLuint program = 0;
@@ -92,4 +90,7 @@ public:
     GLuint fragmentShader = 0;
     GLuint buffer = 0;
     GLuint a_pos = 0;
+
+private:
+    std::shared_ptr<GraphicNode> m_root;
 };
